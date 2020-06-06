@@ -2,14 +2,14 @@ package configs
 
 import "os"
 
-type MailgunConfig struct {
+type MailGunConfig struct {
 	APIKey string `env:"MAILGUN_API_KEY"`
 
 	Domain string `env:"MAILGUN_DOMAIN"`
 }
 
-func GetMailgunConfig() MailgunConfig {
-	return MailgunConfig{
+func GetMailGunConfig() MailGunConfig {
+	return MailGunConfig{
 		APIKey: os.Getenv("MAILGUN_API_KEY"),
 
 		Domain: os.Getenv("MAILGUN_DOMAIN"),

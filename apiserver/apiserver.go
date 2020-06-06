@@ -40,4 +40,6 @@ func Start() {
 	db.AutoMigrate(&user.User{}, &pwdDomain.ResetPassword{})
 	defer db.Close()
 
+	// Setup EmailClient
+	emailClient :=
 }
