@@ -2,8 +2,11 @@ package apiserver
 
 import (
 	"github.com/alonelegion/go_graphql_api/configs"
+	"github.com/alonelegion/go_graphql_api/email_client/mailgun_client"
 	pwdDomain "github.com/alonelegion/go_graphql_api/models/reset_password"
 	"github.com/alonelegion/go_graphql_api/models/user"
+	"github.com/alonelegion/go_graphql_api/repositories/password_reset"
+	"github.com/alonelegion/go_graphql_api/repositories/user_repository"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
@@ -41,5 +44,9 @@ func Start() {
 	defer db.Close()
 
 	// Setup EmailClient
-	emailClient :=
+	emailClient := mailgun_client.NewMailGunClient(config)
+
+	// Setup Repositories
+	userRepo := user_repository.NewUserRepository(db)
+	passRepo := password_reset.NewPasswordResetRepository(db)
 }
