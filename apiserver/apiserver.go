@@ -49,4 +49,7 @@ func Start() {
 	// Setup Repositories
 	userRepo := user_repository.NewUserRepository(db)
 	passRepo := password_reset.NewPasswordResetRepository(db)
+
+	// Setup Services
+	userService :=
 }
