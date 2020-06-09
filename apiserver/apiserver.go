@@ -9,6 +9,8 @@ import (
 	"github.com/alonelegion/go_graphql_api/models/user"
 	"github.com/alonelegion/go_graphql_api/repositories/password_reset"
 	"github.com/alonelegion/go_graphql_api/repositories/user_repository"
+	"github.com/alonelegion/go_graphql_api/services/auth_service"
+	"github.com/alonelegion/go_graphql_api/services/email_service"
 	"github.com/alonelegion/go_graphql_api/services/user_service"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -59,4 +61,6 @@ func Start() {
 
 	// Setup Services
 	userService := user_service.NewUserService(userRepo, passRepo, randStr, hmac, config.Pepper)
+	authService := auth_service.NewAuthService(config.JWTSecret)
+	emailSevice := email_service.NewEmailService(emailClient)
 }
