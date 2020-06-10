@@ -63,4 +63,7 @@ func Start() {
 	userService := user_service.NewUserService(userRepo, passRepo, randStr, hmac, config.Pepper)
 	authService := auth_service.NewAuthService(config.JWTSecret)
 	emailSevice := email_service.NewEmailService(emailClient)
+
+	// Setup controllers
+	user_controller :=
 }
