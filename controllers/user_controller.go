@@ -6,7 +6,11 @@ import (
 	"github.com/alonelegion/go_graphql_api/services/email_service"
 	"github.com/alonelegion/go_graphql_api/services/user_service"
 	"github.com/gin-gonic/gin"
+
+	"errors"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 // Структура представляет формат запроса входа или регистрации
@@ -118,23 +122,130 @@ func (ctl *userController) Login(c *gin.Context) {
 }
 
 func (ctl *userController) GetById(c *gin.Context) {
-	panic("implement me")
+	id, err := ctl.getUserId(c.Param(("id")))
+	if err != nil {
+		HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+	user, err := ctl.user.GetById(id)
+	if err != nil {
+		es := err.Error()
+		if strings.Contains(es, "not found") {
+			HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
+			return
+		}
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	userOutput := ctl.mapToUserOutput(user)
+	HTTPResponse(c, http.StatusOK, "ok", userOutput)
 }
 
 func (ctl *userController) GetProfile(c *gin.Context) {
-	panic("implement me")
+	id, exists := c.Get("user_id")
+	if exists == false {
+		HTTPResponse(c, http.StatusBadRequest, "Неверный идентификатор пользователя", nil)
+		return
+	}
+
+	user, err := ctl.user.GetById(id.(uint))
+	if err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	userOutput := ctl.mapToUserOutput(user)
+	HTTPResponse(c, http.StatusOK, "ok", userOutput)
 }
 
 func (ctl *userController) Update(c *gin.Context) {
-	panic("implement me")
+	// Получить идентификатор пользователя из контекста
+	id, exist := c.Get("user_id")
+	if exist == false {
+		HTTPResponse(c, http.StatusBadRequest, "Неверный идентификатор пользователя", nil)
+		return
+	}
+
+	user, err := ctl.user.GetById(id.(uint))
+	if err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	// Считать ввод пользователя
+	var userInput UserUpdateInput
+	if err := c.ShouldBindJSON(&userInput); err != nil {
+		HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+
+	// Проверка пользователя
+	if user.ID != id {
+		HTTPResponse(c, http.StatusUnauthorized, "Неравторизованный", nil)
+		return
+	}
+
+	// Обновление записи пользователя
+	user.FirstName = userInput.FirstName
+	user.LastName = userInput.LastName
+	user.Email = userInput.Email
+	if err := ctl.user.Update(user); err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	// Ответ
+	userOutput := ctl.mapToUserOutput(user)
+	HTTPResponse(c, http.StatusOK, "ok", userOutput)
 }
 
 func (ctl *userController) ForgotPassword(c *gin.Context) {
-	panic("implement me")
+	var input UserInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+
+	// Присвоение токена пользователю для обновления пароля
+	token, err := ctl.user.InitiateResetPassword(input.Email)
+	if err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	// Отправка email с токеном для обновления пароля
+	if err := ctl.es.ResetPassword(input.Email, token); err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	HTTPResponse(c, http.StatusOK, "Email отправлен", nil)
+	return
 }
 
 func (ctl *userController) ResetPassword(c *gin.Context) {
-	panic("implement me")
+	var input UserInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+
+	token := c.Request.URL.Query().Get("token")
+	if token == "" {
+		HTTPResponse(c, http.StatusNotFound, "Требуется токен", nil)
+		return
+	}
+
+	user, err := ctl.user.CompleteUpdatePassword(token, input.Password)
+	if err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	err = ctl.login(c, user)
+	if err != nil {
+		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
 }
 
 /*
@@ -169,4 +280,12 @@ func (ctl *userController) mapToUserOutput(u *user.User) *UserOutput {
 		Role:      u.Role,
 		Active:    u.Active,
 	}
+}
+
+func (ctl *userController) getUserId(userIdParam string) (uint, error) {
+	userId, err := strconv.Atoi(userIdParam)
+	if err != nil {
+		return 0, errors.New("идентификатор пользователя должен быть числом")
+	}
+	return uint(userId), nil
 }

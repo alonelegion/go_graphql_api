@@ -1,10 +1,14 @@
 package apiserver
 
 import (
+	"log"
+
 	"github.com/alonelegion/go_graphql_api/configs"
+	"github.com/alonelegion/go_graphql_api/controllers"
 	"github.com/alonelegion/go_graphql_api/email_client/mailgun_client"
 	"github.com/alonelegion/go_graphql_api/general/hmac_hash"
 	"github.com/alonelegion/go_graphql_api/general/random_string"
+
 	pwdDomain "github.com/alonelegion/go_graphql_api/models/reset_password"
 	"github.com/alonelegion/go_graphql_api/models/user"
 	"github.com/alonelegion/go_graphql_api/repositories/password_reset"
@@ -17,7 +21,6 @@ import (
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"log"
 )
 
 var (
@@ -65,5 +68,8 @@ func Start() {
 	emailSevice := email_service.NewEmailService(emailClient)
 
 	// Setup controllers
-	user_controller :=
+	user_controller := controllers.NewUserController(userService, authService, emailSevice)
+
+	// Setup routes
+
 }
