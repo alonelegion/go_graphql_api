@@ -3,10 +3,10 @@ module github.com/alonelegion/go_graphql_api
 go 1.14
 
 require (
-	github.com/99designs/gqlgen v0.11.3 // indirect
+	github.com/99designs/gqlgen v0.11.3
 	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/gin-gonic/gin v1.6.3 // indirect
+	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/spec v0.19.8 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
@@ -20,6 +20,7 @@ require (
 	github.com/stretchr/testify v1.6.0 // indirect
 	github.com/swaggo/swag v1.6.7 // indirect
 	github.com/urfave/cli/v2 v2.2.0 // indirect
+	github.com/vektah/gqlparser/v2 v2.0.1
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	golang.org/x/net v0.0.0-20200602114024-627f9648deb9 // indirect
 	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980 // indirect

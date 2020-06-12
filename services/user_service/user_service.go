@@ -14,7 +14,7 @@ import (
 )
 
 type UserService interface {
-	GetById(id uint) (*user.User, error)
+	GetByID(id uint) (*user.User, error)
 	GetByEmail(email string) (*user.User, error)
 	Create(*user.User) error
 	Update(*user.User) error
@@ -48,7 +48,7 @@ func NewUserService(
 	}
 }
 
-func (u *userService) GetById(id uint) (*user.User, error) {
+func (u *userService) GetByID(id uint) (*user.User, error) {
 	if id == 0 {
 		return nil, errors.New("id param is required")
 	}

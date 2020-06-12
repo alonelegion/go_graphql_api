@@ -127,7 +127,7 @@ func (ctl *userController) GetById(c *gin.Context) {
 		HTTPResponse(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	user, err := ctl.user.GetById(id)
+	user, err := ctl.user.GetByID(id)
 	if err != nil {
 		es := err.Error()
 		if strings.Contains(es, "not found") {
@@ -148,7 +148,7 @@ func (ctl *userController) GetProfile(c *gin.Context) {
 		return
 	}
 
-	user, err := ctl.user.GetById(id.(uint))
+	user, err := ctl.user.GetByID(id.(uint))
 	if err != nil {
 		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
 		return
@@ -165,7 +165,7 @@ func (ctl *userController) Update(c *gin.Context) {
 		return
 	}
 
-	user, err := ctl.user.GetById(id.(uint))
+	user, err := ctl.user.GetByID(id.(uint))
 	if err != nil {
 		HTTPResponse(c, http.StatusInternalServerError, err.Error(), nil)
 		return

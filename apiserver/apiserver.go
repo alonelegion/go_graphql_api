@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/alonelegion/go_graphql_api/configs"
 	"github.com/alonelegion/go_graphql_api/controllers"
@@ -65,11 +66,16 @@ func Start() {
 	// Setup Services
 	userService := user_service.NewUserService(userRepo, passRepo, randStr, hmac, config.Pepper)
 	authService := auth_service.NewAuthService(config.JWTSecret)
-	emailSevice := email_service.NewEmailService(emailClient)
+	emailService := email_service.NewEmailService(emailClient)
 
 	// Setup controllers
-	user_controller := controllers.NewUserController(userService, authService, emailSevice)
+	user_controller := controllers.NewUserController(userService, authService, emailService)
+
+	// Setup middlewares
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 
 	// Setup routes
+	router.GET("/ping", func(context *gin.Context) { context.String(http.StatusOK, "pong") })
 
 }
