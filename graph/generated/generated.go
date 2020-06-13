@@ -65,10 +65,15 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error)
+	Login(ctx context.Context, input model.RegisterLogin) (*model.RegisterLoginOutput, error)
+	Register(ctx context.Context, input model.RegisterLogin) (*model.RegisterLoginOutput, error)
+	UpdateUser(ctx context.Context, input model.UpdateUser) (*model.User, error)
+	ForgotPassword(ctx context.Context, email string) (bool, error)
+	ResetPassword(ctx context.Context, resetToken string, password string) (*model.RegisterLoginOutput, error)
 }
 type QueryResolver interface {
-	Todos(ctx context.Context) ([]*model.Todo, error)
+	User(ctx context.Context, id int) (*model.User, error)
+	UserProfile(ctx context.Context) (*model.User, error)
 }
 
 type executableSchema struct {
