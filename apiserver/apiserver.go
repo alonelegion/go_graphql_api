@@ -1,6 +1,7 @@
 package apiserver
 
 import (
+	"github.com/alonelegion/go_graphql_api/graph"
 	"log"
 	"net/http"
 
@@ -77,5 +78,6 @@ func Start() {
 
 	// Setup routes
 	router.GET("/ping", func(context *gin.Context) { context.String(http.StatusOK, "pong") })
-
+	router.GET("/graphql", graph.PlayGroundHandler("/query"))
+	router.POST("/query")
 }
