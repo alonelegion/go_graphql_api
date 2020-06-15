@@ -1,7 +1,9 @@
 package apiserver
 
 import (
+	"fmt"
 	"github.com/alonelegion/go_graphql_api/graph"
+	"github.com/alonelegion/go_graphql_api/middlewares"
 	"log"
 	"net/http"
 
@@ -70,7 +72,7 @@ func Start() {
 	emailService := email_service.NewEmailService(emailClient)
 
 	// Setup controllers
-	user_controller := controllers.NewUserController(userService, authService, emailService)
+	userController := controllers.NewUserController(userService, authService, emailService)
 
 	// Setup middlewares
 	router.Use(gin.Logger())
@@ -79,5 +81,29 @@ func Start() {
 	// Setup routes
 	router.GET("/ping", func(context *gin.Context) { context.String(http.StatusOK, "pong") })
 	router.GET("/graphql", graph.PlayGroundHandler("/query"))
-	router.POST("/query")
+	router.POST("/query",
+		middlewares.SetUserContext(config.JWTSecret),
+		graph.GraphqlHandler(userService, authService, emailService))
+
+	api := router.Group("/api")
+
+	api.POST("/register", userController.Register)
+	api.POST("/login", userController.Login)
+	api.POST("/forgot_password", userController.ForgotPassword)
+	api.POST("/update_password", userController.ResetPassword)
+
+	userGroup := api.Group("/users")
+
+	userGroup.GET("/:id", userController.GetById)
+
+	account := api.Group("/account")
+	account.Use(middlewares.RequiredLoggedIn(config.JWTSecret))
+	{
+		account.GET("/profile", userController.GetProfile)
+		account.PUT("/profile", userController.Update)
+	}
+
+	// Start
+	port := fmt.Sprintf(":%s", config.Port)
+	_ = router.Run(port)
 }
