@@ -13,12 +13,12 @@ import (
 func GraphqlHandler(
 	user user_service.UserService,
 	auth auth_service.AuthService,
-	email email_service.EmailService) gin.HandlerFunc {
+	es email_service.EmailService) gin.HandlerFunc {
 	conf := generated.Config{
 		Resolvers: &Resolver{
-			UserService: user,
-			AuthService: auth,
-			Email:       email,
+			UserService:  user,
+			AuthService:  auth,
+			EmailService: es,
 		},
 	}
 	exec := generated.NewExecutableSchema(conf)
@@ -29,7 +29,7 @@ func GraphqlHandler(
 }
 
 func PlayGroundHandler(path string) gin.HandlerFunc {
-	h := playground.Handler("GraphQl Playground", path)
+	h := playground.Handler("GraphQL Playground", path)
 	return func(context *gin.Context) {
 		h.ServeHTTP(context.Writer, context.Request)
 	}

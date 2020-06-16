@@ -2,15 +2,6 @@
 
 package model
 
-type User struct {
-	ID        int    `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	Role      string `json:"role"`
-	Active    bool   `json:"active"`
-}
-
 type RegisterLogin struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -22,7 +13,16 @@ type RegisterLoginOutput struct {
 }
 
 type UpdateUser struct {
-	FirstName *string `json:"first_name"`
-	LastName  *string `json:"last_name"`
+	FirstName *string `json:"firstName"`
+	LastName  *string `json:"lastName"`
 	Email     string  `json:"email"`
+}
+
+type User struct {
+	ID        int    `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Role      string `json:"role"`
+	Active    bool   `json:"active"`
 }
