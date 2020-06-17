@@ -13,7 +13,7 @@ import (
 	"github.com/alonelegion/go_graphql_api/general/hmac_hash"
 	"github.com/alonelegion/go_graphql_api/general/random_string"
 
-	pwdDomain "github.com/alonelegion/go_graphql_api/models/reset_password"
+	pwdModel "github.com/alonelegion/go_graphql_api/models/reset_password"
 	"github.com/alonelegion/go_graphql_api/models/user"
 	"github.com/alonelegion/go_graphql_api/repositories/password_reset"
 	"github.com/alonelegion/go_graphql_api/repositories/user_repository"
@@ -25,6 +25,8 @@ import (
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/lib/pq" // Postgres setup
 )
 
 var (
@@ -52,7 +54,7 @@ func Start() {
 	}
 
 	// Migration
-	db.AutoMigrate(&user.User{}, &pwdDomain.ResetPassword{})
+	db.AutoMigrate(&user.User{}, &pwdModel.ResetPassword{})
 	defer db.Close()
 
 	// Setup EmailClient

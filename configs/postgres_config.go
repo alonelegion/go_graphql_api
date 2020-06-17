@@ -25,7 +25,7 @@ func (c PostgresConfig) GetPostgresConnectionInfo() string {
 			c.Host, c.Port, c.User, c.Name)
 	}
 	return fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode-disable",
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		c.Host, c.Port, c.User, c.Password, c.Name)
 }
 
