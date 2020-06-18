@@ -1,5 +1,243 @@
-info:
-  contact: {}
-  license: {}
-paths: {}
+---
 swagger: "2.0"
+info:
+  description: "This is Go API Graphql"
+  version: "1.0"
+  title: "Go Graphql API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    name: "API Support"
+    url: "http://www.swagger.io/support"
+    email: "support@swagger.io"
+host: "localhost:3000"
+basePath: "/"
+paths:
+  /api/account/profile:
+    get:
+      summary: "Get user info of the logged in user"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+    put:
+      summary: "Update account profile"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "email"
+          description: "Email"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Email"
+        - in: "body"
+          name: "firstName"
+          description: "First Name"
+          required: false
+          schema:
+            type: "string"
+          x-exportParamName: "FirstName"
+          x-optionalDataType: "String"
+        - in: "body"
+          name: "lastName"
+          description: "Last Name"
+          required: false
+          schema:
+            type: "string"
+          x-exportParamName: "LastName"
+          x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+  /api/forgot_password:
+    post:
+      summary: "Sends token to user's email to update user's password"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "email"
+          description: "Email"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Email"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+  /api/login:
+    post:
+      summary: "Login"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "email"
+          description: "Email"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Email"
+        - in: "body"
+          name: "password"
+          description: "Password"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Password"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+  /api/register:
+    post:
+      summary: "Register new user"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "email"
+          description: "Email"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Email"
+        - in: "body"
+          name: "password"
+          description: "Password"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Password"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+  /api/update_password:
+    post:
+      summary: "Update user's password"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "password"
+          description: "Password"
+          required: true
+          schema:
+            type: "string"
+          x-exportParamName: "Password"
+        - name: "token"
+          in: "query"
+          description: "Token"
+          required: true
+          type: "string"
+          x-exportParamName: "Token"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+  /api/users/{id}:
+    get:
+      summary: "Get user info of given id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID"
+          required: true
+          type: "integer"
+          x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/controllers.Response"
+securityDefinitions:
+  ApiKeyAuth:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  controllers.Response:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+      data:
+        type: "object"
+        properties: {}
+      msg:
+        type: "string"
+    example:
+      msg: "msg"
+      code: 0
+      data: "{}"
