@@ -25,7 +25,7 @@ func TestEmailService(t *testing.T) {
 	es := NewEmailService(client)
 
 	t.Run("Welcome", func(t *testing.T) {
-		toEmail := "alice@cc.cc"
+		toEmail := "example@mail.org"
 		client.On("Welcome", welcomeTheme, welcomeText, toEmail, welcomeHTML).Return(nil)
 
 		err := es.Welcome(toEmail)
@@ -33,7 +33,7 @@ func TestEmailService(t *testing.T) {
 	})
 
 	t.Run("ResetPassword", func(t *testing.T) {
-		toEmail := "alice@cc.cc"
+		toEmail := "example@mail.org"
 		token := "secret-token"
 		client.On("ResetPassword", resetTheme, resetTextTmpl, toEmail, resetHTMLTmpl, token).Return(nil)
 

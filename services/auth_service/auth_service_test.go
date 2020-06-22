@@ -14,7 +14,7 @@ func TestToken(t *testing.T) {
 			gorm.Model{ID: uint(1), CreatedAt: time.Now(), UpdatedAt: time.Now(), DeletedAt: nil},
 			"",
 			"",
-			"alice@cc.cc",
+			"example@mail.org",
 			"",
 			"",
 			true,
