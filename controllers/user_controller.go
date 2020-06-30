@@ -53,11 +53,11 @@ type userController struct {
 }
 
 func NewUserController(
-	user user_service.UserService,
+	us user_service.UserService,
 	auth auth_service.AuthService,
 	es email_service.EmailService) UserController {
 	return &userController{
-		user: user,
+		user: us,
 		auth: auth,
 		es:   es,
 	}
